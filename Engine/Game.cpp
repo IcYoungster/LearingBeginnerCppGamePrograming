@@ -45,22 +45,66 @@ void Game::ComposeFrame()
 	//代表这个准心的基线位置,为了防止其画到当前屏幕外，最小值应为5
 	const int x = 400;
 	const int y = 300;
-	
-	const bool condition = wnd.mouse.LeftIsPressed();
-	if(condition)
-	{ 
-	gfx.PutPixel(x - 5, y, 255, 255, 255);
-	gfx.PutPixel(x - 4, y, 255, 255, 255);
-	gfx.PutPixel(x - 3, y, 255, 255, 255);
-	gfx.PutPixel(x + 3, y, 255, 255, 255);
-	gfx.PutPixel(x + 4, y, 255, 255, 255);
-	gfx.PutPixel(x + 5, y, 255, 255, 255);
-	//
-	gfx.PutPixel(x, y - 5, 255, 255, 255);
-	gfx.PutPixel(x, y - 4, 255, 255, 255);
-	gfx.PutPixel(x, y - 3, 255, 255, 255);
-	gfx.PutPixel(x, y + 3, 255, 255, 255);
-	gfx.PutPixel(x, y + 4, 255, 255, 255);
-	gfx.PutPixel(x, y + 5, 255, 255, 255);
+	const int pmove = 200;
+	int px = x, py = y;
+	int R = 255;
+
+	const bool cond_ccolor = wnd.kbd.KeyIsPressed(VK_SHIFT);
+	const bool cond_cshape = wnd.kbd.KeyIsPressed(VK_CONTROL);
+	const bool cond_up = wnd.kbd.KeyIsPressed(VK_UP);
+	const bool cond_down = wnd.kbd.KeyIsPressed(VK_DOWN);
+	const bool cond_left = wnd.kbd.KeyIsPressed(VK_LEFT);
+	const bool cond_right = wnd.kbd.KeyIsPressed(VK_RIGHT);
+	if (cond_up)
+	{
+		py = y - pmove;
+	}
+	if (cond_down)
+	{
+		py = y + pmove;
+	}
+	if (cond_left)
+	{
+		px = x - pmove;
+	}
+	if (cond_right)
+	{
+		px = x + pmove;
+	}
+	if (cond_ccolor)
+	{
+		R = R - 255;
+	}
+	if (cond_cshape)//形状1
+	{
+		gfx.PutPixel(px - 5, py, R, 255, 255);
+		gfx.PutPixel(px - 4, py, R, 255, 255);
+		gfx.PutPixel(px - 3, py, R, 255, 255);
+		gfx.PutPixel(px + 3, py, R, 255, 255);
+		gfx.PutPixel(px + 4, py, R, 255, 255);
+		gfx.PutPixel(px + 5, py, R, 255, 255);
+		//
+		gfx.PutPixel(px, py - 5, R, 255, 255);
+		gfx.PutPixel(px, py - 4, R, 255, 255);
+		gfx.PutPixel(px, py - 3, R, 255, 255);
+		gfx.PutPixel(px, py + 3, R, 255, 255);
+		gfx.PutPixel(px, py + 4, R, 255, 255);
+		gfx.PutPixel(px, py + 5, R, 255, 255);
+	}
+	else//另一个形状
+	{
+		gfx.PutPixel(px - 5, py, R, 255, 255);
+		gfx.PutPixel(px - 4, py, R, 255, 255);
+		gfx.PutPixel(px - 3, py, R, 255, 255);
+		gfx.PutPixel(px - 2, py, R, 255, 255);
+		gfx.PutPixel(px - 1, py, R, 255, 255);
+		gfx.PutPixel(px, py, R, 255, 255);
+		//
+		gfx.PutPixel(px, py - 5, R, 255, 255);
+		gfx.PutPixel(px, py - 4, R, 255, 255);
+		gfx.PutPixel(px, py - 3, R, 255, 255);
+		gfx.PutPixel(px, py - 2, R, 255, 255);
+		gfx.PutPixel(px, py - 1, R, 255, 255);
+		gfx.PutPixel(px, py, R, 255, 255);
 	}
 }
