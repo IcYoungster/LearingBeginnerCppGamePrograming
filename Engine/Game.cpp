@@ -36,75 +36,117 @@ void Game::Go()
 	gfx.EndFrame();
 }
 
-void Game::UpdateModel()
+void Game::UpdateModel()//任务1：将逻辑部分和绘图部分分离
 {
+	//代表这个准心的基线位置,为了防止其画到当前屏幕外，最小值应为5
+
+	//任务3：将每帧增加的速度改为每秒增加的速度，需要控制速度增加只在第一帧，之后59帧（以刷新率60为例）不改变变量值
+
+	//程序原理：先判断是否按下按键，若按下，再判断是否被控制，如果被抑制了那就什么都不做，直到松开按键，重置inhibitUp的值为false
+	//第一次进入程序会先执行inhibitUp的else模块，之后inhibitUp变为true，那么直到松开按键之前就都不做任何操作
+	//于是实现了按一次键加一次速度
+	if (wnd.kbd.KeyIsPressed(VK_UP))
+	{
+		if (inhibitUp)
+		{
+		}
+		else
+		{
+			vy = vy - a;
+			inhibitUp = true;
+			//y = y - pmove;
+		}
+	}
+	else {
+		inhibitUp = false;
+	}
+	if (wnd.kbd.KeyIsPressed(VK_DOWN))
+	{
+		if (inhibitDown)
+		{
+		}
+		else
+		{
+			vy = vy + a;
+			inhibitDown = true;
+			//y = y + pmove;
+		}
+	}
+	else {
+		inhibitDown = false;
+	}
+	if (wnd.kbd.KeyIsPressed(VK_LEFT))
+	{
+		if (inhibitLeft)
+		{
+		}
+		else
+		{
+			vx = vx - a;
+			inhibitLeft = true;
+			//x = x - pmove;
+		}
+	}
+	else {
+		inhibitLeft = false;
+	}
+	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
+	{
+		if (inhibitRight)
+		{
+		}
+		else
+		{
+			vx = vx + a;
+			inhibitRight = true;
+			//x = x + pmove;
+		}
+	}
+	else {
+		inhibitRight = false;
+	}
+	//给x加上加速度（大小为上面设置的值）
+	x = x + vx;
+	y = y + vy;
+	if (wnd.kbd.KeyIsPressed(VK_SHIFT))
+	{
+		R = R - 255;
+	}
+	ShapeIsChanged = wnd.kbd.KeyIsPressed(VK_CONTROL);
 }
 
 void Game::ComposeFrame()
 {
-	//代表这个准心的基线位置,为了防止其画到当前屏幕外，最小值应为5
-	const int x = 400;
-	const int y = 300;
-	const int pmove = 200;
-	int px = x, py = y;
-	int R = 255;
-
-	const bool cond_ccolor = wnd.kbd.KeyIsPressed(VK_SHIFT);
-	const bool cond_cshape = wnd.kbd.KeyIsPressed(VK_CONTROL);
-	const bool cond_up = wnd.kbd.KeyIsPressed(VK_UP);
-	const bool cond_down = wnd.kbd.KeyIsPressed(VK_DOWN);
-	const bool cond_left = wnd.kbd.KeyIsPressed(VK_LEFT);
-	const bool cond_right = wnd.kbd.KeyIsPressed(VK_RIGHT);
-	if (cond_up)
+	if (ShapeIsChanged)//换个形状
 	{
-		py = y - pmove;
-	}
-	if (cond_down)
-	{
-		py = y + pmove;
-	}
-	if (cond_left)
-	{
-		px = x - pmove;
-	}
-	if (cond_right)
-	{
-		px = x + pmove;
-	}
-	if (cond_ccolor)
-	{
-		R = R - 255;
-	}
-	if (cond_cshape)//形状1
-	{
-		gfx.PutPixel(px - 5, py, R, 255, 255);
-		gfx.PutPixel(px - 4, py, R, 255, 255);
-		gfx.PutPixel(px - 3, py, R, 255, 255);
-		gfx.PutPixel(px + 3, py, R, 255, 255);
-		gfx.PutPixel(px + 4, py, R, 255, 255);
-		gfx.PutPixel(px + 5, py, R, 255, 255);
+		gfx.PutPixel(x - 5, y, R, 255, 255);
+		gfx.PutPixel(x - 4, y, R, 255, 255);
+		gfx.PutPixel(x - 3, y, R, 255, 255);
+		gfx.PutPixel(x - 2, y, R, 255, 255);
+		gfx.PutPixel(x - 1, y, R, 255, 255);
+		gfx.PutPixel(x, y, R, 255, 255);
 		//
-		gfx.PutPixel(px, py - 5, R, 255, 255);
-		gfx.PutPixel(px, py - 4, R, 255, 255);
-		gfx.PutPixel(px, py - 3, R, 255, 255);
-		gfx.PutPixel(px, py + 3, R, 255, 255);
-		gfx.PutPixel(px, py + 4, R, 255, 255);
-		gfx.PutPixel(px, py + 5, R, 255, 255);
+		gfx.PutPixel(x, y - 5, R, 255, 255);
+		gfx.PutPixel(x, y - 4, R, 255, 255);
+		gfx.PutPixel(x, y - 3, R, 255, 255);
+		gfx.PutPixel(x, y - 2, R, 255, 255);
+		gfx.PutPixel(x, y - 1, R, 255, 255);
+		gfx.PutPixel(x, y, R, 255, 255);
 	}
-	else//另一个形状
+	else//默认形状
 	{
-		gfx.PutPixel(px - 5, py, R, 255, 255);
-		gfx.PutPixel(px - 4, py, R, 255, 255);
-		gfx.PutPixel(px - 3, py, R, 255, 255);
-		gfx.PutPixel(px - 2, py, R, 255, 255);
-		gfx.PutPixel(px - 1, py, R, 255, 255);
-		gfx.PutPixel(px, py, R, 255, 255);
+		gfx.PutPixel(x - 5, y, R, 255, 255);
+		gfx.PutPixel(x - 4, y, R, 255, 255);
+		gfx.PutPixel(x - 3, y, R, 255, 255);
+		gfx.PutPixel(x + 3, y, R, 255, 255);
+		gfx.PutPixel(x + 4, y, R, 255, 255);
+		gfx.PutPixel(x + 5, y, R, 255, 255);
 		//
-		gfx.PutPixel(px, py - 5, R, 255, 255);
-		gfx.PutPixel(px, py - 4, R, 255, 255);
-		gfx.PutPixel(px, py - 3, R, 255, 255);
-		gfx.PutPixel(px, py - 2, R, 255, 255);
-		gfx.PutPixel(px, py - 1, R, 255, 255);
-		gfx.PutPixel(px, py, R, 255, 255);
+		gfx.PutPixel(x, y - 5, R, 255, 255);
+		gfx.PutPixel(x, y - 4, R, 255, 255);
+		gfx.PutPixel(x, y - 3, R, 255, 255);
+		gfx.PutPixel(x, y + 3, R, 255, 255);
+		gfx.PutPixel(x, y + 4, R, 255, 255);
+		gfx.PutPixel(x, y + 5, R, 255, 255);
 	}
 }
