@@ -40,33 +40,13 @@ private:
 private:
 	MainWindow& wnd;
 	Graphics gfx;
-	
-	//储存初始颜色的变量
-	int R = 255;
-	
-	//任务2：将变更方向改为变更速度
-	int x = 400;
-	int y = 300;
-	
-	//限定每帧移动的像素数量
-	const int pmove = 3;
-	
-	//给像素移动添加加速度，位置改变->速度改变。
-	//加速度值设为1，目前没有特殊处理，按下按键其速度每帧增加1
-	const int a = 1;
-	int vx = 0;
-	int vy = 0;
-	
-	//任务1的部分：实现形状变化逻辑和绘图分离，需要一个变量储存绘制图形的状态，默认为未改变，
-	//当按下对应的键位，改变其值为true
-	bool ShapeIsChanged = false;
-
-	//任务3：抑制后59帧的渲染，存放在变量里
-	bool inhibitUp = false;
-	bool inhibitDown = false;
-	bool inhibitLeft = false;
-	bool inhibitRight = false;
 	/********************************/
 	/*  User Variables              */
 	/********************************/
+	int x_fixed = 200;
+	int y_fixed = 200;
+	int x_mobile = 400;
+	int y_mobile = 400;
+
+	bool Colliding;
 };

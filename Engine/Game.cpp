@@ -36,117 +36,119 @@ void Game::Go()
 	gfx.EndFrame();
 }
 
-void Game::UpdateModel()//任务1：将逻辑部分和绘图部分分离
+void Game::UpdateModel()
 {
-	//代表这个准心的基线位置,为了防止其画到当前屏幕外，最小值应为5
-
-	//任务3：将每帧增加的速度改为每秒增加的速度，需要控制速度增加只在第一帧，之后59帧（以刷新率60为例）不改变变量值
-
-	//程序原理：先判断是否按下按键，若按下，再判断是否被控制，如果被抑制了那就什么都不做，直到松开按键，重置inhibitUp的值为false
-	//第一次进入程序会先执行inhibitUp的else模块，之后inhibitUp变为true，那么直到松开按键之前就都不做任何操作
-	//于是实现了按一次键加一次速度
+//控制移动的box
 	if (wnd.kbd.KeyIsPressed(VK_UP))
 	{
-		if (inhibitUp)
-		{
-		}
-		else
-		{
-			vy = vy - a;
-			inhibitUp = true;
-			//y = y - pmove;
-		}
-	}
-	else {
-		inhibitUp = false;
+		y_mobile = y_mobile - 1;
 	}
 	if (wnd.kbd.KeyIsPressed(VK_DOWN))
 	{
-		if (inhibitDown)
-		{
-		}
-		else
-		{
-			vy = vy + a;
-			inhibitDown = true;
-			//y = y + pmove;
-		}
+		y_mobile = y_mobile + 1;
 	}
-	else {
-		inhibitDown = false;
-	}
+	
 	if (wnd.kbd.KeyIsPressed(VK_LEFT))
 	{
-		if (inhibitLeft)
-		{
-		}
-		else
-		{
-			vx = vx - a;
-			inhibitLeft = true;
-			//x = x - pmove;
-		}
-	}
-	else {
-		inhibitLeft = false;
+		x_mobile = x_mobile - 1;
 	}
 	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
 	{
-		if (inhibitRight)
-		{
-		}
-		else
-		{
-			vx = vx + a;
-			inhibitRight = true;
-			//x = x + pmove;
-		}
+		x_mobile = x_mobile + 1;
 	}
-	else {
-		inhibitRight = false;
-	}
-	//给x加上加速度（大小为上面设置的值）
-	x = x + vx;
-	y = y + vy;
-	if (wnd.kbd.KeyIsPressed(VK_SHIFT))
+
+//判断碰撞，首先设定两个盒子的边框
+	const int left_mobile = x_mobile - 5;
+	const int right_mobile = x_mobile + 5;
+	const int top_mobile = y_mobile - 5;
+	const int bottom_mobile = y_mobile + 5;
+
+	const int left_fixed = x_fixed - 5;
+	const int right_fixed = x_fixed + 5;
+	const int top_fixed = y_fixed - 5;
+	const int bottom_fixed = y_fixed + 5;
+//然后写条件,当m盒左侧小于f盒右侧，且m盒右侧大于f盒左侧，且m盒上方小于f盒下方，且m盒下方大于f盒上方时确认为碰撞
+	if (left_mobile < right_fixed &&
+		right_mobile > left_fixed &&
+		top_mobile < bottom_fixed &&
+		bottom_mobile > top_fixed)
 	{
-		R = R - 255;
+		Colliding = true;
+	}else {
+		Colliding = false;
 	}
-	ShapeIsChanged = wnd.kbd.KeyIsPressed(VK_CONTROL);
 }
 
 void Game::ComposeFrame()
 {
-	if (ShapeIsChanged)//换个形状
+	//首先绘制固定的方框
+	int r_fixed = 0, g_fixed = 255, b_fixed = 0;
+	//上方横向线
+	gfx.PutPixel(x_fixed - 5, y_fixed + 5, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed - 4, y_fixed + 5, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed - 3, y_fixed + 5, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed + 3, y_fixed + 5, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed + 4, y_fixed + 5, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed + 5, y_fixed + 5, r_fixed,g_fixed,b_fixed);
+	//上方纵向线	 	ixedf		fixed	
+	gfx.PutPixel(x_fixed - 5, y_fixed + 4, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed - 5, y_fixed + 3, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed + 5, y_fixed + 4, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed + 5, y_fixed + 3, r_fixed,g_fixed,b_fixed);
+	//			  	ixedf		fixed
+	gfx.PutPixel(x_fixed - 5, y_fixed - 5, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed - 4, y_fixed - 5, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed - 3, y_fixed - 5, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed + 3, y_fixed - 5, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed + 4, y_fixed - 5, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed + 5, y_fixed - 5, r_fixed,g_fixed,b_fixed);
+	//			  	ixedf		fixed
+	gfx.PutPixel(x_fixed - 5, y_fixed - 4, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed - 5, y_fixed - 3, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed + 5, y_fixed - 4, r_fixed,g_fixed,b_fixed);
+	gfx.PutPixel(x_fixed + 5, y_fixed - 3, r_fixed,g_fixed,b_fixed);
+
+
+//然后先定义移动方框属性和逻辑判断，再绘制移动方框
+	int r_mobile = 0;
+	int	g_mobile = 0;
+	int	b_mobile = 0;
+
+	if (Colliding)
 	{
-		gfx.PutPixel(x - 5, y, R, 255, 255);
-		gfx.PutPixel(x - 4, y, R, 255, 255);
-		gfx.PutPixel(x - 3, y, R, 255, 255);
-		gfx.PutPixel(x - 2, y, R, 255, 255);
-		gfx.PutPixel(x - 1, y, R, 255, 255);
-		gfx.PutPixel(x, y, R, 255, 255);
-		//
-		gfx.PutPixel(x, y - 5, R, 255, 255);
-		gfx.PutPixel(x, y - 4, R, 255, 255);
-		gfx.PutPixel(x, y - 3, R, 255, 255);
-		gfx.PutPixel(x, y - 2, R, 255, 255);
-		gfx.PutPixel(x, y - 1, R, 255, 255);
-		gfx.PutPixel(x, y, R, 255, 255);
+		r_mobile = 255;
+		g_mobile = 0;
+		b_mobile = 0;
+
 	}
 	else//默认形状
 	{
-		gfx.PutPixel(x - 5, y, R, 255, 255);
-		gfx.PutPixel(x - 4, y, R, 255, 255);
-		gfx.PutPixel(x - 3, y, R, 255, 255);
-		gfx.PutPixel(x + 3, y, R, 255, 255);
-		gfx.PutPixel(x + 4, y, R, 255, 255);
-		gfx.PutPixel(x + 5, y, R, 255, 255);
-		//
-		gfx.PutPixel(x, y - 5, R, 255, 255);
-		gfx.PutPixel(x, y - 4, R, 255, 255);
-		gfx.PutPixel(x, y - 3, R, 255, 255);
-		gfx.PutPixel(x, y + 3, R, 255, 255);
-		gfx.PutPixel(x, y + 4, R, 255, 255);
-		gfx.PutPixel(x, y + 5, R, 255, 255);
+		r_mobile = 255;
+		g_mobile = 255;
+		b_mobile = 255;
+
 	}
+	gfx.PutPixel(x_mobile - 5, y_mobile + 5, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile - 4, y_mobile + 5, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile - 3, y_mobile + 5, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile + 3, y_mobile + 5, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile + 4, y_mobile + 5, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile + 5, y_mobile + 5, r_mobile, g_mobile, b_mobile);
+	//上方纵向线	 							   mobile	 mobile	   mobile
+	gfx.PutPixel(x_mobile - 5, y_mobile + 4, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile - 5, y_mobile + 3, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile + 5, y_mobile + 4, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile + 5, y_mobile + 3, r_mobile, g_mobile, b_mobile);
+	//			  							   mobile	 mobile	   mobile
+	gfx.PutPixel(x_mobile - 5, y_mobile - 5, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile - 4, y_mobile - 5, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile - 3, y_mobile - 5, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile + 3, y_mobile - 5, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile + 4, y_mobile - 5, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile + 5, y_mobile - 5, r_mobile, g_mobile, b_mobile);
+	//			  							   mobile	 mobile	   mobile
+	gfx.PutPixel(x_mobile - 5, y_mobile - 4, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile - 5, y_mobile - 3, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile + 5, y_mobile - 4, r_mobile, g_mobile, b_mobile);
+	gfx.PutPixel(x_mobile + 5, y_mobile - 3, r_mobile, g_mobile, b_mobile);
 }
