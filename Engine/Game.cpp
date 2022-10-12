@@ -58,6 +58,7 @@ void Game::UpdateModel()
 		y_mobile = y_mobile - 1;
 	}
 	Colliding = OverlapTest(x_fixed, y_fixed, x_mobile, y_mobile);
+	BoundaryLimit();
 }
 
 void Game::ComposeFrame()
@@ -115,4 +116,27 @@ bool Game::OverlapTest(int box0x, int box0y, int box1x, int box1y)
 		right_box0 >= left_box1 &&
 		top_box0 <= bottom_box1 &&
 		bottom_box0 >= top_box1;
+}
+
+void Game::BoundaryLimit()
+{
+	const int left = x_mobile - 5;
+	const int right = x_mobile + 5;
+	const int top = y_mobile - 5;
+	const int bottom = y_mobile + 5;
+	if (left <= 0)
+	{
+		x_mobile = 5;
+	}else if (right >= gfx.ScreenWidth)//
+	{
+		x_mobile = gfx.ScreenWidth - 6;
+	}
+	if (top <= 0)
+	{
+		y_mobile = 5;
+	}
+	else if (bottom >= gfx.ScreenHeight)//条件必须带等于号，否则会越界
+	{
+		y_mobile = gfx.ScreenHeight - 6;
+	}
 }
