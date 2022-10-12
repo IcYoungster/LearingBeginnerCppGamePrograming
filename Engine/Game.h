@@ -39,6 +39,8 @@ private:
 	/********************************/
 	void DrawBox(int x, int y, int r, int g, int b);
 	bool OverlapTest(int box0x, int box0y, int box1x, int box1y);
+	int ClampScreenX(int x);
+	int ClampScreenY(int y);
 private:
 	MainWindow& wnd;
 	Graphics gfx;
@@ -47,7 +49,8 @@ private:
 	/********************************/
 	int x_fixed = 200;
 	int y_fixed = 200;
-	int x_mobile = 400;
-	int y_mobile = 400;
+	int x_mobile = 600;
+	int y_mobile = 500;
 	bool Colliding = false;
+	bool OutBoundary = false;
 };
