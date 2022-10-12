@@ -41,7 +41,7 @@ void Game::UpdateModel()
 	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
 	{
 		x_mobile = x_mobile + 1;
-}
+	}
 
 	if (wnd.kbd.KeyIsPressed(VK_LEFT))
 	{
@@ -58,14 +58,16 @@ void Game::UpdateModel()
 		y_mobile = y_mobile - 1;
 	}
 	Colliding = OverlapTest(x_fixed, y_fixed, x_mobile, y_mobile);
+	x_mobile = ClampScreenX(x_mobile);
+	y_mobile = ClampScreenY(y_mobile);
 }
 
 void Game::ComposeFrame()
 {
 	DrawBox(x_fixed, y_fixed, 0, 255, 0);
-	
+
 	if (Colliding)
-	{ 
+	{
 		DrawBox(x_mobile, y_mobile, 255, 0, 0);
 	}
 	else
@@ -96,7 +98,7 @@ void Game::DrawBox(int x, int y, int r, int g, int b)
 	gfx.PutPixel(5 + x, 3 + y, r, g, b);
 	gfx.PutPixel(4 + x, 5 + y, r, g, b);
 	gfx.PutPixel(3 + x, 5 + y, r, g, b);
-	}
+}
 
 bool Game::OverlapTest(int box0x, int box0y, int box1x, int box1y)
 {
@@ -115,4 +117,40 @@ bool Game::OverlapTest(int box0x, int box0y, int box1x, int box1y)
 		right_box0 >= left_box1 &&
 		top_box0 <= bottom_box1 &&
 		bottom_box0 >= top_box1;
+}
+//两个函数实现
+int Game::ClampScreenX(int x)
+{
+	const int left = x - 5;
+	const int right = x + 5;
+	if (left < 0)
+	{
+		return 5;
+	}
+	else if (right >= gfx.ScreenWidth)
+	{
+		return gfx.ScreenWidth - 6;
+	}
+	else
+	{
+		return x;
+	}
+}
+
+int Game::ClampScreenY(int y)
+{
+	const int top = y - 5;
+	const int bottom = y + 5;
+	if (top < 0)
+	{
+		return 5;
+	}
+	else if (bottom >= gfx.ScreenHeight)
+	{
+		return gfx.ScreenHeight - 6;
+	}
+	else
+	{
+		return y;
+	}
 }
