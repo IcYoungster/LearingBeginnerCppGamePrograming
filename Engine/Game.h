@@ -1,5 +1,5 @@
-/****************************************************************************************** 
- *	Chili DirectX Framework Version 16.07.20											  *	
+/******************************************************************************************
+ *	Chili DirectX Framework Version 16.07.20											  *
  *	Game.h																				  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
  *																						  *
@@ -37,20 +37,40 @@ private:
 	/********************************/
 	/*  User Functions              */
 	/********************************/
-	void DrawBox(int x, int y, int r, int g, int b);
-	bool OverlapTest(int box0x, int box0y, int box1x, int box1y);
-	int ClampScreenX(int x);
-	int ClampScreenY(int y);
+	void DrawFace(int x, int y);
+	void DrawPoo(int x, int y);
+	void DrawGameOver(int x, int y);
+	void DrawTitleScreen(int x, int y);
+	int ClampScreenX(int x, int width);
+	int ClampScreenY(int y, int height);
+	bool IsColliding(int x0, int y0, int width0, int height0, int x1, int y1, int width1, int height1);
 private:
 	MainWindow& wnd;
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
 	/********************************/
-	int x_fixed = 200;
-	int y_fixed = 200;
-	int x_mobile = 600;
-	int y_mobile = 500;
-	bool Colliding = false;
-	bool OutBoundary = false;
+	int dudeX = 0;
+	int dudeY = 0;
+	int dudeWidth = 20;
+	int dudeHeight = 20;
+	int poo0X = 100;
+	int poo0Y = 100;
+	int poo0vx = 1;
+	int poo0vy = 1;
+	bool poo0IsEaten = false;
+	int poo1X = 300;
+	int poo1Y = 500;
+	int poo1vx = 1;
+	int poo1vy = -1;
+	bool poo1IsEaten = false;
+	int poo2X = 500;
+	int poo2Y = 100;
+	int poo2vx = -1;
+	int poo2vy = 1;
+	bool poo2IsEaten = false;
+	int pooWidth = 24;
+	int pooHeight = 24;
+
+	bool IsStarted = false;
 };
