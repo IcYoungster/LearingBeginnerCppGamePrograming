@@ -1,23 +1,3 @@
-/******************************************************************************************
- *	Chili DirectX Framework Version 16.07.20											  *
- *	Game.cpp																			  *
- *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
- *																						  *
- *	This file is part of The Chili DirectX Framework.									  *
- *																						  *
- *	The Chili DirectX Framework is free software: you can redistribute it and/or modify	  *
- *	it under the terms of the GNU General Public License as published by				  *
- *	the Free Software Foundation, either version 3 of the License, or					  *
- *	(at your option) any later version.													  *
- *																						  *
- *	The Chili DirectX Framework is distributed in the hope that it will be useful,		  *
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of						  *
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the						  *
- *	GNU General Public License for more details.										  *
- *																						  *
- *	You should have received a copy of the GNU General Public License					  *
- *	along with The Chili DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.  *
- ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
 #include<random>//ÎªÁËËæ»úÉú³ÉpoopÎ»ÖÃ
@@ -27,20 +7,17 @@ Game::Game(MainWindow& wnd)//ÓëÀàÃû³ÆÏàÍ¬µÄº¯Êý£¬ÃûÎª¹¹Ôìº¯Êý£¬Ö»ÔÚ³ÌÐò¿ªÊ¼Ê±±»µ
 	wnd(wnd),
 	gfx(wnd)
 {
-	std::random_device rd;//Ëæ»úÖÖ×ÓÉú³ÉÆ÷£¬È»¶ø²»ÉÃ³¤´´½¨´óÁ¿Ëæ»úÊý£¬ËùÒÔ´´½¨Ëæ»úÊý»¹ÊÇÒªÈÃmtÀ´
-	std::mt19937 rng(rd());	//Õâ¸öËæ»úÊýÉú³ÉÆ÷Ã¿´ÎÖØÆôµÄÖÖ×ÓÊý¶¼Ò»Ñù
-	//which means random number generator
-	//mersenne twister:Í¨ÓÃÎ±Ëæ»úÊýÉú³ÉÆ÷£¬Ãû×ÖÀ´Ô´ÓÚÖÜÆÚ³¤¶ÈÎªÃ·É­ËØÊý
-	std::uniform_int_distribution<int> xDist(0, 776);
-	std::uniform_int_distribution<int> yDist(0, 576);
-	//½«Ô­À´µÄ-Á½ÒÚ~Á½ÒÚÆ½¾ù·Ö²¼µ½ÕûÐÍ·¶Î§0~776,¼âÀ¨ºÅÄÚ±íÊ¾Êä³öµÄÀàÐÍ£¬ÃüÃûÎªxDist
-
-	poo0X = xDist(rng);
-	poo0Y = yDist(rng);
-	poo1X = xDist(rng);
-	poo1Y = yDist(rng);
-	poo2X = xDist(rng);
-	poo2Y = yDist(rng);
+	/*³õÊ¼»¯PooµÄ²ÎÊý*/
+	Poo0.vx = 1;
+	Poo0.vy = 1;
+	Poo1.vx = 1;
+	Poo1.vy = -1;
+	Poo2.vx = -1;
+	Poo2.vy = 1;
+	Poo0.RandomNumG();
+	Poo1.RandomNumG();
+	Poo2.RandomNumG();
+	/*³õÊ¼»¯PooµÄ²ÎÊý*/
 }
 
 void Game::Go()
@@ -62,83 +39,27 @@ void Game::UpdateModel()
 		}
 		if (wnd.kbd.KeyIsPressed(VK_UP))
 		{
-			dudeY -= speed;
+			Dude.y -= speed;
 		}
 		if (wnd.kbd.KeyIsPressed(VK_DOWN))
 		{
-			dudeY += speed;
+			Dude.y += speed;
 		}
 		if (wnd.kbd.KeyIsPressed(VK_LEFT))
 		{
-			dudeX -= speed;
+			Dude.x -= speed;
 		}
 		if (wnd.kbd.KeyIsPressed(VK_RIGHT))
 		{
-			dudeX += speed;
+			Dude.x += speed;
 		}
-
-		dudeX = ClampScreenX(dudeX, dudeWidth);
-		dudeY = ClampScreenY(dudeY, dudeHeight);
-		poo0X += poo0vx;
-		poo0Y += poo0vy;
-		poo1X += poo1vx;
-		poo1Y += poo1vy;
-		poo2X += poo2vx;
-		poo2Y += poo2vy;
-
-		{
-			const int poo0Xold = poo0X;
-			const int poo0Yold = poo0Y;
-			poo0X = ClampScreenX(poo0X, pooWidth);
-			if (poo0X != poo0Xold)
-			{
-				poo0vx = -poo0vx;
-			}
-			poo0Y = ClampScreenY(poo0Y, pooHeight);
-			if (poo0Y != poo0Yold)
-			{
-				poo0vy = -poo0vy;
-			}
-			const int poo1Xold = poo1X;
-			const int poo1Yold = poo1Y;
-			poo1X = ClampScreenX(poo1X, pooWidth);
-
-			if (poo1X != poo1Xold)
-			{
-				poo1vx = -poo1vx;
-			}
-			poo1Y = ClampScreenY(poo1Y, pooHeight);
-			if (poo1Y != poo1Yold)
-			{
-				poo1vy = -poo1vy;
-			}
-			const int poo2Xold = poo2X;
-			const int poo2Yold = poo2Y;
-			poo2X = ClampScreenX(poo2X, pooWidth);
-
-			if (poo2X != poo2Xold)
-			{
-				poo2vx = -poo2vx;
-			}
-			poo2Y = ClampScreenY(poo2Y, pooHeight);
-			if (poo2Y != poo2Yold)
-			{
-				poo2vy = -poo2vy;
-			}
-		}
-
-		if (IsColliding(dudeX, dudeY, dudeWidth, dudeHeight, poo0X, poo0Y, pooWidth, pooHeight))
-		{
-			poo0IsEaten = true;
-		}
-		if (IsColliding(dudeX, dudeY, dudeWidth, dudeHeight, poo1X, poo1Y, pooWidth, pooHeight))
-		{
-			poo1IsEaten = true;
-		}
-		if (IsColliding(dudeX, dudeY, dudeWidth, dudeHeight, poo2X, poo2Y, pooWidth, pooHeight))
-		{
-			poo2IsEaten = true;
-		}
+		Dude.ClampDude();
+		Poo0.Update();
+		Poo1.Update();
+		Poo2.Update();
+		Poo0.CollidingTest(Dude.x, Dude.y, Dude.Width, Dude.Height);
+		Poo1.CollidingTest(Dude.x, Dude.y, Dude.Width, Dude.Height);
+		Poo2.CollidingTest(Dude.x, Dude.y, Dude.Width, Dude.Height);
 	}
 	else
 	{
@@ -156,75 +77,24 @@ void Game::ComposeFrame()
 		DrawTitleScreen(325, 211);
 	}
 	else {
-		DrawFace(dudeX, dudeY);
-		if (!poo0IsEaten)
+		DrawFace(Dude.x, Dude.y);
+		if (!Poo0.IsEaten)
 		{
-			DrawPoo(poo0X, poo0Y);
+			DrawPoo(Poo0.x, Poo0.y);
 		}
-		if (!poo1IsEaten)
+		if (!Poo1.IsEaten)
 		{
-			DrawPoo(poo1X, poo1Y);
+			DrawPoo(Poo1.x, Poo1.y);
 		}
-		if (!poo2IsEaten)
+		if (!Poo2.IsEaten)
 		{
-			DrawPoo(poo2X, poo2Y);
+			DrawPoo(Poo2.x, Poo2.y);
 		}
 	}
-	if (poo0IsEaten && poo1IsEaten && poo2IsEaten)
+	if (Poo0.IsEaten && Poo1.IsEaten && Poo2.IsEaten)
 	{
 		DrawGameOver(358, 268);
 	}
-
-
-}
-
-int Game::ClampScreenX(int x, int width)
-{
-	const int right = x + width;//Í¼ÐÎ×îÓÒ²àÏñËØ
-	if (x < 0)//ÒòÎª×óÉÏ½ÇÊÇ»æÖÆÍ¼ÐÎÆðµã
-	{
-		return 0;
-	}
-	else if (right >= gfx.ScreenWidth)//ÓÒ±ß³¬³ö
-	{
-		return (gfx.ScreenWidth - 1 - width);//Éè¶¨xÎªÆÁÄ»³ß´ç£¨ÆÁÄ»±ß½ç£©-Í¼ÐÎ¿í¶È-1
-	}
-	else
-	{
-		return x;
-	}
-
-}
-
-int Game::ClampScreenY(int y, int height)
-{
-	const int bottom = y + height;//Í¼ÐÎ×îÏÂ·½ÏñËØ
-	if (y < 0)//ÒòÎª×óÉÏ½ÇÊÇ»æÖÆÍ¼ÐÎÆðµã
-	{
-		y = 0;
-	}
-	else if (bottom >= gfx.ScreenHeight)//ÏÂ±ß³¬³ö
-	{
-		y = gfx.ScreenHeight - 1 - height;//Éè¶¨xÎªÆÁÄ»³ß´ç£¨ÆÁÄ»±ß½ç£©-Í¼ÐÎ¿í¶È-1
-	}
-	else
-	{
-	}
-	return y;
-
-}
-
-bool Game::IsColliding(int x0, int y0, int width0, int height0, int x1, int y1, int width1, int height1)
-{
-	int right0 = x0 + width0;
-	int bottom0 = y0 + height0;
-	int right1 = x1 + width1;
-	int bottom1 = y1 + height1;
-
-	return x1 <= right0
-		&& x0 <= right1
-		&& y1 <= bottom0
-		&& y0 <= bottom1;
 }
 
 void Game::DrawFace(int x, int y)
