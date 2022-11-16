@@ -1,4 +1,6 @@
 #pragma once
+#include"Graphics.h"
+#include"Dude.h"
 class Poo {
 public:
 	int x;
@@ -9,6 +11,7 @@ public:
 	static constexpr int Width = 24;
 	static constexpr int Height = 24;
 	void Update();
-	void CollidingTest(int dudex, int dudey, int dwidth, int dheight);
+	void CollidingTest(const Dude& dude);
 	void RandomNumG();
+	void Draw(Graphics& gfx) const;
 };
