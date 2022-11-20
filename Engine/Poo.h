@@ -3,12 +3,10 @@
 #include"Dude.h"
 class Poo {
 public:
-	Poo(int ini_vx, int ini_vy);/*Poo的构造函数*/
+	Poo(int ini_x,int ini_y,int ini_vx, int ini_vy);/*Poo的构造函数*/
 	void Update();
-	bool GetEaten() const;
+	bool IsEat() const;
 	void CollidingTest(const Dude& dude);
-	int RandomNumGX();
-	int RandomNumGY();
 	void Draw(Graphics& gfx) const;
 private:
 	int x;

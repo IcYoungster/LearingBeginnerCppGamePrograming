@@ -1,13 +1,14 @@
 #include"Poo.h"
 #include"Graphics.h"
 #include<random>
-Poo::Poo(int ini_vx, int ini_vy)
+Poo::Poo(int ini_x, int ini_y, int ini_vx, int ini_vy)
 {
-	x = RandomNumGX();
-	y = RandomNumGY();
+	x = ini_x;
+	y = ini_y;
 	vx = ini_vx;
 	vy = ini_vy;
 }
+
 void Poo::Update()
 {
 	/*Poo移动速度设定*/
@@ -42,7 +43,7 @@ void Poo::Update()
 
 }
 
-bool Poo::GetEaten() const
+bool Poo::IsEat() const
 {
 	return IsEaten;
 }
@@ -50,34 +51,18 @@ bool Poo::GetEaten() const
 void Poo::CollidingTest(const Dude& dude)
 {
 	/*碰撞检测*/
-	const int dright = dude.x + dude.Width;
-	const int dbottom = dude.y + dude.Height;
+	const int dright = dude.getX() + dude.getWidth();
+	const int dbottom = dude.getY() + dude.getHeight();
 	const int pright = x + Width;//因为x是poo的x值
 	const int pbottom = y + Height;
-	if(	x		<= dright&&
-		dude.x	<= pright&&
-		y		<= dbottom&&
-		dude.y	<= pbottom)
+	if(	x			<= dright&&
+		dude.getX() <= pright &&
+		y			<= dbottom&&
+		dude.getY() <= pbottom)
 	{
 		IsEaten = true;
 	}
 	/*碰撞检测*/
-}
-
-int Poo::RandomNumGX()
-{
-	std::random_device rd;
-	std::mt19937 rng(rd());
-	std::uniform_int_distribution<int> xDist(0, 776);
-	return (xDist(rng));
-}
-
-int Poo::RandomNumGY()
-{
-	std::random_device rd;
-	std::mt19937 rng(rd());
-	std::uniform_int_distribution<int> yDist(0, 576);
-	return (yDist(rng));
 }
 
 void Poo::Draw(Graphics &gfx) const

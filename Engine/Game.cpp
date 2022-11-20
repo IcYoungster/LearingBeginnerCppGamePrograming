@@ -1,15 +1,20 @@
 #include "MainWindow.h"
 #include "Game.h"
-#include<random>//为了随机生成poop位置
 
 Game::Game(MainWindow& wnd)//与类名称相同的函数，名为构造函数，只在程序开始时被调用，我们用来随机初始化poop位置
 	:
 	wnd(wnd),
 	gfx(wnd),
-	Poo0(1, 1),
-	Poo1(1,-1),
-	Poo2(-1,1)
+	rng(rd()),
+	xDist(0,770),
+	yDist(0,570),
+	Poo0(xDist(rng), yDist(rng), 1, 1),
+	Poo1(xDist(rng), yDist(rng), 1, -1),
+	Poo2(xDist(rng), yDist(rng), -1, 1)
 {
+	/*用构造函数将多个变量初始化了*/
+
+	/*rng、xDist、Poo等都嵌入到了Game类中，所以用Game类构造函数可以初始化这些实例*/
 }
 
 void Game::Go()
@@ -24,27 +29,7 @@ void Game::UpdateModel()
 {
 	if (IsStarted)
 	{
-		int speed = 1;
-		if (wnd.kbd.KeyIsPressed(VK_SHIFT))
-		{
-			speed = 3;
-		}
-		if (wnd.kbd.KeyIsPressed(VK_UP))
-		{
-			Dude.y -= speed;
-		}
-		if (wnd.kbd.KeyIsPressed(VK_DOWN))
-		{
-			Dude.y += speed;
-		}
-		if (wnd.kbd.KeyIsPressed(VK_LEFT))
-		{
-			Dude.x -= speed;
-		}
-		if (wnd.kbd.KeyIsPressed(VK_RIGHT))
-		{
-			Dude.x += speed;
-		}
+		Dude.Update(wnd.kbd);/*不能只写kbd,因为kbd在game.h没有定义，kbd是wnd的嵌入对象*/
 		Dude.ClampDude();
 		Poo0.Update();
 		Poo1.Update();
@@ -70,20 +55,20 @@ void Game::ComposeFrame()
 	}
 	else {
 		Dude.Draw(gfx);
-		if (!Poo0.GetEaten())
+		if (!Poo0.IsEat())
 		{
 			Poo0.Draw(gfx);
 		}
-		if (!Poo1.GetEaten())
+		if (!Poo1.IsEat())
 		{
 			Poo1.Draw(gfx);
 		}
-		if (!Poo2.GetEaten())
+		if (!Poo2.IsEat())
 		{
 			Poo2.Draw(gfx);
 		}
 	}
-	if (Poo0.GetEaten() && Poo1.GetEaten() && Poo2.GetEaten())
+	if (Poo0.IsEat() && Poo1.IsEat() && Poo2.IsEat())
 	{
 		DrawGameOver(358, 268);
 	}

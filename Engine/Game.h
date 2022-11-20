@@ -3,6 +3,7 @@
 #include "Graphics.h"
 #include "Poo.h"
 #include "Dude.h"
+#include<random>
 
 class Game
 {
@@ -25,11 +26,16 @@ private:
 	MainWindow& wnd;
 	Graphics gfx;
 
+	/*创建RNG实例，随后在Game构造函数里初始化*/
+	std::random_device rd;
+	std::mt19937 rng;
+	std::uniform_int_distribution<int> xDist;
+	std::uniform_int_distribution<int> yDist;
 	/*创建Poo实例*/
 	Poo Poo0;
 	Poo Poo1;
 	Poo Poo2;
-	/*创建Poo实例*/
+	/*创建Dude实例*/
 	Dude Dude;
 	
 	bool IsStarted = false;

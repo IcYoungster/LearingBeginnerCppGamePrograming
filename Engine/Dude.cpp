@@ -1,6 +1,5 @@
 #include"graphics.h"
 #include"Dude.h"
-#include"Keyboard.h"
 void Dude::ClampDude()
 {
 	const int bottom = y + Height;
@@ -13,6 +12,51 @@ void Dude::ClampDude()
 		x = 0;
 	else if (right >= Graphics::ScreenWidth)
 		x = Graphics::ScreenWidth - 1 - Width;
+}
+
+int Dude::getX() const
+{
+	return x;
+}
+
+int Dude::getY() const
+{
+	return y;
+}
+
+int Dude::getWidth()
+{
+	return Width;
+}
+
+int Dude::getHeight()
+{
+	return Height;
+}
+
+void Dude::Update(const Keyboard& kbd)
+{
+	int speed = 1;
+	if (kbd.KeyIsPressed(VK_SHIFT))
+	{
+		speed = 3;
+	}
+	if (kbd.KeyIsPressed(VK_UP))
+	{
+		y -= speed;
+	}
+	if (kbd.KeyIsPressed(VK_DOWN))
+	{
+		y += speed;
+	}
+	if (kbd.KeyIsPressed(VK_LEFT))
+	{
+		x -= speed;
+	}
+	if (kbd.KeyIsPressed(VK_RIGHT))
+	{
+		x += speed;
+	}
 }
 
 void Dude::Draw(Graphics& gfx) const
