@@ -1,6 +1,13 @@
 #include"Poo.h"
 #include"Graphics.h"
 #include<random>
+Poo::Poo(int ini_vx, int ini_vy)
+{
+	x = RandomNumGX();
+	y = RandomNumGY();
+	vx = ini_vx;
+	vy = ini_vy;
+}
 void Poo::Update()
 {
 	/*Poo移动速度设定*/
@@ -35,6 +42,11 @@ void Poo::Update()
 
 }
 
+bool Poo::GetEaten() const
+{
+	return IsEaten;
+}
+
 void Poo::CollidingTest(const Dude& dude)
 {
 	/*碰撞检测*/
@@ -52,17 +64,20 @@ void Poo::CollidingTest(const Dude& dude)
 	/*碰撞检测*/
 }
 
-void Poo::RandomNumG()
+int Poo::RandomNumGX()
 {
-	std::random_device rd;//随机种子生成器，然而不擅长创建大量随机数，所以创建随机数还是要让mt来
-	std::mt19937 rng(rd());	//这个随机数生成器每次重启的种子数都一样
-	//which means random number generator
-	//mersenne twister:通用伪随机数生成器，名字来源于周期长度为梅森素数
+	std::random_device rd;
+	std::mt19937 rng(rd());
 	std::uniform_int_distribution<int> xDist(0, 776);
+	return (xDist(rng));
+}
+
+int Poo::RandomNumGY()
+{
+	std::random_device rd;
+	std::mt19937 rng(rd());
 	std::uniform_int_distribution<int> yDist(0, 576);
-	x = xDist(rng);
-	y = yDist(rng);
-	//将生成范围的-两亿~两亿平均分布到整型范围0~776,尖括号内表示输出的类型，命名为xDist
+	return (yDist(rng));
 }
 
 void Poo::Draw(Graphics &gfx) const

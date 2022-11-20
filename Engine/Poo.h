@@ -3,6 +3,14 @@
 #include"Dude.h"
 class Poo {
 public:
+	Poo(int ini_vx, int ini_vy);/*Poo的构造函数*/
+	void Update();
+	bool GetEaten() const;
+	void CollidingTest(const Dude& dude);
+	int RandomNumGX();
+	int RandomNumGY();
+	void Draw(Graphics& gfx) const;
+private:
 	int x;
 	int y;
 	int vx;
@@ -10,8 +18,4 @@ public:
 	bool IsEaten = false;
 	static constexpr int Width = 24;
 	static constexpr int Height = 24;
-	void Update();
-	void CollidingTest(const Dude& dude);
-	void RandomNumG();
-	void Draw(Graphics& gfx) const;
 };

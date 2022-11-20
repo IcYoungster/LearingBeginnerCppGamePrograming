@@ -5,19 +5,11 @@
 Game::Game(MainWindow& wnd)//与类名称相同的函数，名为构造函数，只在程序开始时被调用，我们用来随机初始化poop位置
 	:
 	wnd(wnd),
-	gfx(wnd)
+	gfx(wnd),
+	Poo0(1, 1),
+	Poo1(1,-1),
+	Poo2(-1,1)
 {
-	/*初始化Poo的参数*/
-	Poo0.vx = 1;
-	Poo0.vy = 1;
-	Poo1.vx = 1;
-	Poo1.vy = -1;
-	Poo2.vx = -1;
-	Poo2.vy = 1;
-	Poo0.RandomNumG();
-	Poo1.RandomNumG();
-	Poo2.RandomNumG();
-	/*初始化Poo的参数*/
 }
 
 void Game::Go()
@@ -78,20 +70,20 @@ void Game::ComposeFrame()
 	}
 	else {
 		Dude.Draw(gfx);
-		if (!Poo0.IsEaten)
+		if (!Poo0.GetEaten())
 		{
 			Poo0.Draw(gfx);
 		}
-		if (!Poo1.IsEaten)
+		if (!Poo1.GetEaten())
 		{
 			Poo1.Draw(gfx);
 		}
-		if (!Poo2.IsEaten)
+		if (!Poo2.GetEaten())
 		{
 			Poo2.Draw(gfx);
 		}
 	}
-	if (Poo0.IsEaten && Poo1.IsEaten && Poo2.IsEaten)
+	if (Poo0.GetEaten() && Poo1.GetEaten() && Poo2.GetEaten())
 	{
 		DrawGameOver(358, 268);
 	}

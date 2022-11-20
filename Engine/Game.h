@@ -20,6 +20,8 @@ private:
 	void DrawGameOver(int x, int y);
 	void DrawTitleScreen(int x, int y);
 private:
+	/*下面的都是嵌入对象*/
+
 	MainWindow& wnd;
 	Graphics gfx;
 
