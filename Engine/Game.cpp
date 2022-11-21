@@ -1,20 +1,27 @@
 #include "MainWindow.h"
 #include "Game.h"
 
-Game::Game(MainWindow& wnd)//与类名称相同的函数，名为构造函数，只在程序开始时被调用，我们用来随机初始化poop位置
+/*初始化实例*/
+Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
 	rng(rd()),
 	xDist(0,770),
 	yDist(0,570),
-	Poo0(xDist(rng), yDist(rng), 1, 1),
-	Poo1(xDist(rng), yDist(rng), 1, -1),
-	Poo2(xDist(rng), yDist(rng), -1, 1)
+	vDist(-1,1)
 {
-	/*用构造函数将多个变量初始化了*/
-
-	/*rng、xDist、Poo等都嵌入到了Game类中，所以用Game类构造函数可以初始化这些实例*/
+	/*循环初始化实例*/
+	for (int i = 0; i < nPoo; i++)
+	{
+		Poos[i].Init(xDist(rng), yDist(rng), vDist(rng), vDist(rng));
+	}
+	/*初始化全部的Rectangle*/
+	for (int i = 0; i < nRect; i++)
+	{
+		rects[i].Init(xDist(rng), yDist(rng));
+	}
+	
 }
 
 void Game::Go()
@@ -29,14 +36,19 @@ void Game::UpdateModel()
 {
 	if (IsStarted)
 	{
-		Dude.Update(wnd.kbd);/*不能只写kbd,因为kbd在game.h没有定义，kbd是wnd的嵌入对象*/
+		/*限制Dude的范围，提供Dude操作*/
+		Dude.Update(wnd.kbd);
 		Dude.ClampDude();
-		Poo0.Update();
-		Poo1.Update();
-		Poo2.Update();
-		Poo0.CollidingTest(Dude);
-		Poo1.CollidingTest(Dude);
-		Poo2.CollidingTest(Dude);
+		/*限制Poo范围和速度，检测是否与Dude碰撞*/
+		for (int i = 0; i < nPoo; i++)
+		{
+			Poos[i].Update();
+			Poos[i].CollidingTest(Dude);
+		}
+		for (int i = 0; i < nRect; i++)
+		{
+			rects[0].CollidingTest(Dude);
+		}
 	}
 	else
 	{
@@ -55,23 +67,19 @@ void Game::ComposeFrame()
 	}
 	else {
 		Dude.Draw(gfx);
-		if (!Poo0.IsEat())
+		/*检测Dude是否与Poo碰撞,若碰撞则停止游戏*/
+		bool AllEaten = false;
+		for (int i = 0; i < nPoo; i++)
 		{
-			Poo0.Draw(gfx);
+			if(!(Poos[i].IsEat()))
+			Poos[i].Draw(gfx);
+			AllEaten = AllEaten && Poos[i].IsEat();
 		}
-		if (!Poo1.IsEat())
+		if (AllEaten)
 		{
-			Poo1.Draw(gfx);
+			DrawGameOver(358, 268);
 		}
-		if (!Poo2.IsEat())
-		{
-			Poo2.Draw(gfx);
-		}
-	}
-	if (Poo0.IsEat() && Poo1.IsEat() && Poo2.IsEat())
-	{
-		DrawGameOver(358, 268);
-	}
+	}	
 }
 
 void Game::DrawGameOver(int x, int y)

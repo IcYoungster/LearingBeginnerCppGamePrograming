@@ -1,16 +1,22 @@
 #include"Poo.h"
 #include"Graphics.h"
-#include<random>
-Poo::Poo(int ini_x, int ini_y, int ini_vx, int ini_vy)
+#include<assert.h>
+void Poo::Init(int ini_x, int ini_y, int ini_vx, int ini_vy)
 {
+	/*之前用构造函数会在创建对象时初始化，而现在用成员函数初始化不会自动初始化每个实例*/
+	/*用assert可以帮助检查是否初始化了每一个实例*/
+	assert(PooIsInitialized == false);
 	x = ini_x;
 	y = ini_y;
 	vx = ini_vx;
 	vy = ini_vy;
+	PooIsInitialized = true;
 }
 
 void Poo::Update()
 {
+	assert(PooIsInitialized == true);//如果有Poo没初始化那么会触发exception
+
 	/*Poo移动速度设定*/
 	x += vx;
 	y += vy;
@@ -45,11 +51,13 @@ void Poo::Update()
 
 bool Poo::IsEat() const
 {
+	assert(PooIsInitialized == true);
 	return IsEaten;
 }
 
 void Poo::CollidingTest(const Dude& dude)
 {
+	assert(PooIsInitialized == true);
 	/*碰撞检测*/
 	const int dright = dude.getX() + dude.getWidth();
 	const int dbottom = dude.getY() + dude.getHeight();
@@ -67,6 +75,7 @@ void Poo::CollidingTest(const Dude& dude)
 
 void Poo::Draw(Graphics &gfx) const
 {
+	assert(PooIsInitialized == true);
 	gfx.PutPixel(14 + x, 0 + y, 138, 77, 0);
 	gfx.PutPixel(7 + x, 1 + y, 138, 77, 0);
 	gfx.PutPixel(13 + x, 1 + y, 138, 77, 0);

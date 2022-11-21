@@ -3,6 +3,7 @@
 #include "Graphics.h"
 #include "Poo.h"
 #include "Dude.h"
+#include "Rect.h"
 #include<random>
 
 class Game
@@ -31,12 +32,16 @@ private:
 	std::mt19937 rng;
 	std::uniform_int_distribution<int> xDist;
 	std::uniform_int_distribution<int> yDist;
+	std::uniform_int_distribution<int> vDist;
 	/*创建Poo实例*/
-	Poo Poo0;
-	Poo Poo1;
-	Poo Poo2;
+	static constexpr int nPoo = 100;
+	Poo Poos[nPoo];
 	/*创建Dude实例*/
 	Dude Dude;
+	/*创建红色方块实例*/
+	static constexpr int nRect = 10;
+	Rect rects[nRect];
+	//Rect rect;
 	
 	bool IsStarted = false;
 };
