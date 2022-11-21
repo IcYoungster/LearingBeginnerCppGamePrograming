@@ -49,13 +49,7 @@ void Poo::Update()
 
 }
 
-bool Poo::IsEat() const
-{
-	assert(PooIsInitialized == true);
-	return IsEaten;
-}
-
-void Poo::CollidingTest(const Dude& dude)
+bool Poo::CollidingTest(const Dude& dude)
 {
 	assert(PooIsInitialized == true);
 	/*碰撞检测*/
@@ -63,14 +57,10 @@ void Poo::CollidingTest(const Dude& dude)
 	const int dbottom = dude.getY() + dude.getHeight();
 	const int pright = x + Width;//因为x是poo的x值
 	const int pbottom = y + Height;
-	if(	x			<= dright&&
+	return(x <= dright &&
 		dude.getX() <= pright &&
-		y			<= dbottom&&
-		dude.getY() <= pbottom)
-	{
-		IsEaten = true;
-	}
-	/*碰撞检测*/
+		y <= dbottom &&
+		dude.getY() <= pbottom);
 }
 
 void Poo::Draw(Graphics &gfx) const

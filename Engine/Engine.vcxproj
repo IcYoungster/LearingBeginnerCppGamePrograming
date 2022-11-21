@@ -145,6 +145,7 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="meter.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Poo.h" />
     <ClInclude Include="Rect.h" />

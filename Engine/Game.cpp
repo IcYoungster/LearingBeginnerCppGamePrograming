@@ -9,19 +9,15 @@ Game::Game(MainWindow& wnd)
 	rng(rd()),
 	xDist(0,770),
 	yDist(0,570),
-	vDist(-1,1)
+	vDist(-1,1),
+	rect(xDist(rng), yDist(rng)),/*初始化Rectangle*/
+	meter(20,20)
 {
 	/*循环初始化实例*/
 	for (int i = 0; i < nPoo; i++)
 	{
 		Poos[i].Init(xDist(rng), yDist(rng), vDist(rng), vDist(rng));
 	}
-	/*初始化全部的Rectangle*/
-	for (int i = 0; i < nRect; i++)
-	{
-		rects[i].Init(xDist(rng), yDist(rng));
-	}
-	
 }
 
 void Game::Go()
@@ -32,9 +28,11 @@ void Game::Go()
 	gfx.EndFrame();
 }
 
+//更新游戏画面
 void Game::UpdateModel()
 {
-	if (IsStarted)
+	rect.UpdateColor();//在游戏结束后还可以闪烁
+	if (IsStarted && !IsGameOver)//不符合条件就不会更新画面，从而让画面冻结
 	{
 		/*限制Dude的范围，提供Dude操作*/
 		Dude.Update(wnd.kbd);
@@ -43,11 +41,15 @@ void Game::UpdateModel()
 		for (int i = 0; i < nPoo; i++)
 		{
 			Poos[i].Update();
-			Poos[i].CollidingTest(Dude);
+			if (Poos[i].CollidingTest(Dude))
+			{
+				IsGameOver = true;
+			}
 		}
-		for (int i = 0; i < nRect; i++)
+		if (rect.CollidingTest(Dude))
 		{
-			rects[0].CollidingTest(Dude);
+			rect.Respawn(xDist(rng), yDist(rng));
+			meter.IncreaseLevel();
 		}
 	}
 	else
@@ -67,18 +69,19 @@ void Game::ComposeFrame()
 	}
 	else {
 		Dude.Draw(gfx);
-		/*检测Dude是否与Poo碰撞,若碰撞则停止游戏*/
-		bool AllEaten = false;
+		/*绘制Poos*/
 		for (int i = 0; i < nPoo; i++)
 		{
-			if(!(Poos[i].IsEat()))
 			Poos[i].Draw(gfx);
-			AllEaten = AllEaten && Poos[i].IsEat();
 		}
-		if (AllEaten)
+		/*绘制Rectangle*/
+		rect.Draw(gfx);
+		/*若Dude与Poo碰撞，停止游戏*/
+		if (IsGameOver)
 		{
 			DrawGameOver(358, 268);
 		}
+		meter.Draw(gfx);
 	}	
 }
 

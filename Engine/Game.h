@@ -4,6 +4,7 @@
 #include "Poo.h"
 #include "Dude.h"
 #include "Rect.h"
+#include "meter.h"
 #include<random>
 
 class Game
@@ -34,14 +35,13 @@ private:
 	std::uniform_int_distribution<int> yDist;
 	std::uniform_int_distribution<int> vDist;
 	/*创建Poo实例*/
-	static constexpr int nPoo = 100;
+	static constexpr int nPoo = 10;
 	Poo Poos[nPoo];
 	/*创建Dude实例*/
 	Dude Dude;
 	/*创建红色方块实例*/
-	static constexpr int nRect = 10;
-	Rect rects[nRect];
-	//Rect rect;
-	
+	Rect rect;
+	Meter meter;
+	bool IsGameOver = false;
 	bool IsStarted = false;
 };

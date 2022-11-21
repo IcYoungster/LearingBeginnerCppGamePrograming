@@ -4,15 +4,15 @@
 class Rect
 {
 public:
-	void Init(int ini_x, int ini_y);
+	Rect(int ini_x, int ini_y);
 	void Draw(Graphics& gfx) const;
-	void CollidingTest(const Dude& Dude);
-	bool IsEat();
-	void SetEat(bool var);
+	bool CollidingTest(const Dude& Dude);
+	void Respawn(int ini_x,int ini_y);
+	void UpdateColor();
 private:
-	static constexpr int width = 20;
-	static constexpr int height = 20;
+	static constexpr int side = 20;
+	Color c = { 127,0,0 };
+	bool colorIncreseing = true;
 	int x;
 	int y;
-	bool IsEaten = false;
 };
