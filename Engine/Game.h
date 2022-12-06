@@ -1,11 +1,8 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
-#include "Poo.h"
-#include "Dude.h"
-#include "Rect.h"
-#include "meter.h"
-#include<random>
+#include "Goal.h"
+#include <random>
 
 class Game
 {
@@ -20,28 +17,18 @@ private:
 	/********************************/
 	/*  User Functions              */
 	/********************************/
-	void DrawGameOver(int x, int y);
-	void DrawTitleScreen(int x, int y);
 private:
 	/*下面的都是嵌入对象*/
-
+	
 	MainWindow& wnd;
 	Graphics gfx;
-
-	/*创建RNG实例，随后在Game构造函数里初始化*/
-	std::random_device rd;
+	Board brd;
+	Snake snake;
+	Location delta_loc = { 1,0 };//设置delta量为x正向1格
 	std::mt19937 rng;
-	std::uniform_int_distribution<int> xDist;
-	std::uniform_int_distribution<int> yDist;
-	std::uniform_int_distribution<int> vDist;
-	/*创建Poo实例*/
-	static constexpr int nPoo = 10;
-	Poo Poos[nPoo];
-	/*创建Dude实例*/
-	Dude Dude;
-	/*创建红色方块实例*/
-	Rect rect;
-	Meter meter;
-	bool IsGameOver = false;
-	bool IsStarted = false;
+	Goal goal;
+	//计数器每帧+1，到20（frequency）计数器归零，若刷新率为60则一秒移动三个单位
+	static constexpr int snakeMoveFrequecy = 20;
+	int snakeMoveCounter = 0;
+	bool GameIsOver = false;
 };
