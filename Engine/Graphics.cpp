@@ -25,6 +25,7 @@
 #include <assert.h>
 #include <string>
 #include <array>
+#include <cmath>
 
 // Ignore the intellisense error "cannot open source file" for .shh files.
 // They will be created during the build sequence before the preprocessor runs.
@@ -335,6 +336,27 @@ void Graphics::DrawRect( int x0,int y0,int x1,int y1,Color c )
 		}
 	}
 }
+
+void Graphics::DrawCircle(int x, int y, int r, Color c)
+{
+	//定义圆的外接正方形范围
+	int  left   =    (x - r);
+	int  right  =    (x + r);
+	int  top    =    (y - r);
+	int  bottom =    (y + r);
+	//遍历正方形，当与圆心距离的平方小于半径平方时说明在圆内，需要着色
+	for (int i = top; i <= bottom; i++)
+	{
+		for (int j = left; j <= right; j++)
+		{
+			if ((y - i) * (y - i) + (x - j) * (x - j) <= r * r)
+			{
+				PutPixel(i, j, c);
+			}
+		}
+	}
+}
+
 
 //////////////////////////////////////////////////
 //           Graphics Exception
